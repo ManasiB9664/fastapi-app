@@ -1,12 +1,19 @@
 import requests
 
 # URL of the APIs (make sure to adjust the ports if needed)
-CLASSIFY_API_URL = "http://127.0.0.1:8000/classify-text/"
-SUMMARIZE_API_URL = "http://127.0.0.1:8001/summarize/"
+CLASSIFY_API_URL = "https://extraction-api-wy3r.onrender.com" #http://127.0.0.1:8000/classify-text/
+SUMMARIZE_API_URL = "https://summarization-api-5wic.onrender.com" #http://127.0.0.1:8001/summarize/
 
 # Function to classify the text into categories using the classification API
 def classify_text(List_text):
-    response = requests.post(CLASSIFY_API_URL, json={"text": List_text})
+    try:
+        response = requests.get(f"{CLASSIFY_API_URL}/endpoint",json={"text": List_text}, timeout=10)
+        response.raise_for_status()  # Raise error for bad responses
+        data = response.json()
+        print(data)
+    except requests.exceptions.RequestException as e:
+        print("Error:", e)
+
     if response.status_code == 200:
         return response.json()  # Return the categorized clauses
     else:
@@ -15,7 +22,14 @@ def classify_text(List_text):
 
 # Function to summarize text using the summarization API
 def summarize_text(text):
-    response = requests.post(SUMMARIZE_API_URL, json={"text": text})
+    try:
+        response = requests.get(f"{SUMMARIZE_API_URL}/endpoint",json={"text": text}, timeout=10)
+        response.raise_for_status()  # Raise error for bad responses
+        data = response.json()
+        print(data)
+    except requests.exceptions.RequestException as e:
+        print("Error:", e)
+        
     if response.status_code == 200:
         return response.json().get("summary", "")  # Return the summary
     else:

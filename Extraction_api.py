@@ -4,6 +4,11 @@ from typing import Dict, List
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Text Classification API. Use /classify-text/ to classify your text."}
+
+
 # Define a model for the request body
 class TextQuery(BaseModel):
     text: List[str]  # Expecting a list of strings (each string is a paragraph)
