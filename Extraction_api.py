@@ -4,14 +4,16 @@ from typing import Dict, List
 
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to the Text Classification API. Use /classify-text/ to classify your text."}
-
-
 # Define a model for the request body
 class TextQuery(BaseModel):
     text: List[str]  # Expecting a list of strings (each string is a paragraph)
+
+# Define an endpoint to receive text and return classified clauses
+@app.post("/classify-text/")
+async def classify_text_endpoint(query: TextQuery):
+    # Call the classification function with the list of paragraphs
+    classified_clauses = classify_text(query.text)
+    return classified_clauses
 
 # Classify the text into different categories
 def classify_text(List_text: List[str]) -> Dict[str, List[str]]:
@@ -50,9 +52,3 @@ def classify_text(List_text: List[str]) -> Dict[str, List[str]]:
 
     return clauses
 
-# Define an endpoint to receive text and return classified clauses
-@app.post("/classify-text/")
-async def classify_text_endpoint(query: TextQuery):
-    # Call the classification function with the list of paragraphs
-    classified_clauses = classify_text(query.text)
-    return classified_clauses
